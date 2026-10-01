@@ -1,1083 +1,351 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>نظام الحضور والغياب | كلية طب الأسنان - جامعة المنوفية</title>
-
-    <meta name="description"
-          content="نظام إلكتروني لإدارة حضور وغياب طلاب كلية طب الأسنان - جامعة المنوفية">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
-          rel="stylesheet">
-
-    <style>
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        :root {
-            --primary: #173b63;
-            --primary-light: #285b8f;
-            --secondary: #2f80b7;
-            --light-blue: #eef6fb;
-            --lighter-blue: #f7fbfe;
-            --white: #ffffff;
-            --text: #173b63;
-            --muted: #718096;
-            --border: #dce8f2;
-            --success: #198754;
-        }
-
-        body {
-            font-family: "Cairo", sans-serif;
-            min-height: 100vh;
-            background:
-                radial-gradient(
-                    circle at top right,
-                    rgba(47, 128, 183, 0.15),
-                    transparent 35%
-                ),
-                linear-gradient(
-                    135deg,
-                    #eef6fb 0%,
-                    #ffffff 55%,
-                    #eaf4fb 100%
-                );
-            color: var(--text);
-        }
-
-        /* =========================
-           HEADER
-        ========================== */
-
-        header {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            border-bottom: 1px solid var(--border);
-            box-shadow: 0 4px 20px rgba(23, 59, 99, 0.07);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .navbar {
-            max-width: 1250px;
-            margin: auto;
-            min-height: 78px;
-            padding: 12px 25px;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .brand-logo {
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            background: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 22px;
-            font-weight: 800;
-            box-shadow: 0 5px 15px rgba(23, 59, 99, 0.20);
-        }
-
-        .brand-text h1 {
-            font-size: 17px;
-            font-weight: 800;
-            color: var(--primary);
-            line-height: 1.5;
-        }
-
-        .brand-text p {
-            font-size: 11px;
-            color: var(--muted);
-        }
-
-        .status {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            font-size: 12px;
-            color: var(--success);
-            font-weight: 600;
-        }
-
-        .status-dot {
-            width: 9px;
-            height: 9px;
-            background: #22c55e;
-            border-radius: 50%;
-            box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.12);
-        }
-
-        /* =========================
-           MAIN
-        ========================== */
-
-        main {
-            min-height: calc(100vh - 78px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 55px 20px;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1120px;
-            margin: auto;
-        }
-
-        .hero {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-
-            padding: 7px 16px;
-            border-radius: 30px;
-
-            background: rgba(47, 128, 183, 0.10);
-            color: var(--secondary);
-
-            font-size: 12px;
-            font-weight: 700;
-
-            margin-bottom: 18px;
-        }
-
-        .hero h2 {
-            font-size: clamp(28px, 4vw, 45px);
-            line-height: 1.4;
-            color: var(--primary);
-            font-weight: 800;
-            margin-bottom: 12px;
-        }
-
-        .hero h2 span {
-            color: var(--secondary);
-        }
-
-        .hero p {
-            max-width: 680px;
-            margin: auto;
-            color: var(--muted);
-            font-size: 15px;
-            line-height: 2;
-        }
-
-        /* =========================
-           LOGIN CARDS
-        ========================== */
-
-        .login-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 22px;
-        }
-
-        .login-card {
-            background: rgba(255, 255, 255, 0.92);
-            border: 1px solid var(--border);
-            border-radius: 22px;
-            padding: 30px 25px;
-
-            text-align: center;
-
-            box-shadow:
-                0 12px 35px rgba(23, 59, 99, 0.08);
-
-            transition:
-                transform 0.25s ease,
-                box-shadow 0.25s ease,
-                border-color 0.25s ease;
-        }
-
-        .login-card:hover {
-            transform: translateY(-7px);
-
-            border-color: rgba(47, 128, 183, 0.35);
-
-            box-shadow:
-                0 20px 45px rgba(23, 59, 99, 0.13);
-        }
-
-        .icon {
-            width: 70px;
-            height: 70px;
-
-            margin: 0 auto 18px;
-
-            border-radius: 20px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    var(--primary),
-                    var(--secondary)
-                );
-
-            color: white;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            font-size: 29px;
-
-            box-shadow:
-                0 10px 20px rgba(47, 128, 183, 0.20);
-        }
-
-        .login-card h3 {
-            font-size: 20px;
-            margin-bottom: 8px;
-            color: var(--primary);
-        }
-
-        .login-card p {
-            min-height: 52px;
-            color: var(--muted);
-            font-size: 13px;
-            line-height: 1.9;
-            margin-bottom: 20px;
-        }
-
-        .login-btn {
-            width: 100%;
-            border: none;
-            border-radius: 12px;
-
-            padding: 12px 18px;
-
-            background: var(--primary);
-            color: white;
-
-            font-family: inherit;
-            font-size: 14px;
-            font-weight: 700;
-
-            cursor: pointer;
-
-            transition:
-                background 0.2s ease,
-                transform 0.2s ease;
-        }
-
-        .login-btn:hover {
-            background: var(--secondary);
-            transform: translateY(-2px);
-        }
-
-        /* =========================
-           INFORMATION
-        ========================== */
-
-        .features {
-            margin-top: 35px;
-
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-        }
-
-        .feature {
-            background: rgba(255, 255, 255, 0.70);
-            border: 1px solid var(--border);
-            border-radius: 15px;
-
-            padding: 16px;
-
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .feature-icon {
-            width: 40px;
-            height: 40px;
-            flex-shrink: 0;
-
-            background: var(--light-blue);
-            color: var(--secondary);
-
-            border-radius: 11px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            font-size: 18px;
-        }
-
-        .feature strong {
-            display: block;
-            font-size: 12px;
-            color: var(--primary);
-            margin-bottom: 2px;
-        }
-
-        .feature span {
-            font-size: 11px;
-            color: var(--muted);
-        }
-
-        /* =========================
-           FOOTER
-        ========================== */
-
-        footer {
-            text-align: center;
-            padding: 25px 15px;
-
-            color: var(--muted);
-            font-size: 11px;
-        }
-
-        footer strong {
-            color: var(--primary);
-        }
-
-        /* =========================
-           MODAL
-        ========================== */
-
-        .modal {
-            position: fixed;
-            inset: 0;
-
-            background: rgba(10, 30, 50, 0.55);
-
-            display: none;
-            align-items: center;
-            justify-content: center;
-
-            padding: 20px;
-
-            z-index: 5000;
-
-            backdrop-filter: blur(5px);
-        }
-
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-box {
-            width: 100%;
-            max-width: 430px;
-
-            background: white;
-
-            border-radius: 22px;
-
-            padding: 30px;
-
-            box-shadow:
-                0 25px 70px rgba(0, 0, 0, 0.20);
-
-            animation: modalIn 0.25s ease;
-        }
-
-        @keyframes modalIn {
-
-            from {
-                opacity: 0;
-                transform: translateY(15px) scale(0.97);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-
-        }
-
-        .modal-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            margin-bottom: 25px;
-        }
-
-        .modal-header h3 {
-            color: var(--primary);
-            font-size: 20px;
-        }
-
-        .close-btn {
-            border: none;
-            background: #f1f5f9;
-
-            width: 35px;
-            height: 35px;
-
-            border-radius: 50%;
-
-            cursor: pointer;
-
-            font-size: 18px;
-            color: #64748b;
-        }
-
-        .form-group {
-            margin-bottom: 17px;
-        }
-
-        .form-group label {
-            display: block;
-
-            font-size: 12px;
-            font-weight: 700;
-
-            color: var(--primary);
-
-            margin-bottom: 7px;
-        }
-
-        .form-group input {
-            width: 100%;
-
-            border: 1px solid var(--border);
-            border-radius: 11px;
-
-            padding: 12px 13px;
-
-            font-family: inherit;
-            font-size: 13px;
-
-            outline: none;
-
-            transition: border-color 0.2s ease;
-        }
-
-        .form-group input:focus {
-            border-color: var(--secondary);
-        }
-
-        .submit-btn {
-            width: 100%;
-
-            border: none;
-            border-radius: 11px;
-
-            padding: 13px;
-
-            background: var(--primary);
-            color: white;
-
-            font-family: inherit;
-            font-weight: 700;
-
-            cursor: pointer;
-
-            margin-top: 5px;
-        }
-
-        .submit-btn:hover {
-            background: var(--secondary);
-        }
-
-        .demo-note {
-            margin-top: 15px;
-            padding: 10px;
-
-            border-radius: 9px;
-
-            background: #f8fafc;
-
-            color: var(--muted);
-
-            font-size: 10px;
-            text-align: center;
-            line-height: 1.7;
-        }
-
-        /* =========================
-           RESPONSIVE
-        ========================== */
-
-        @media (max-width: 850px) {
-
-            .login-grid {
-                grid-template-columns: 1fr;
-                max-width: 500px;
-                margin: auto;
-            }
-
-            .features {
-                grid-template-columns: 1fr;
-            }
-
-            .navbar {
-                padding: 10px 15px;
-            }
-
-            .status {
-                display: none;
-            }
-
-        }
-
-        @media (max-width: 500px) {
-
-            main {
-                padding: 35px 15px;
-            }
-
-            .brand-text h1 {
-                font-size: 14px;
-            }
-
-            .brand-text p {
-                font-size: 9px;
-            }
-
-            .brand-logo {
-                width: 44px;
-                height: 44px;
-            }
-
-            .hero {
-                margin-bottom: 28px;
-            }
-
-            .hero p {
-                font-size: 13px;
-            }
-
-            .login-card {
-                padding: 25px 20px;
-            }
-
-        }
-
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نظام الحضور والغياب | كلية طب الأسنان - جامعة المنوفية</title>
+  <meta name="description" content="نظام إلكتروني لإدارة حضور وغياب طلاب كلية طب الأسنان - جامعة المنوفية">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --primary:#173b63;--primary2:#285b8f;--secondary:#2f80b7;
+      --bg:#eef6fb;--white:#fff;--text:#173b63;--muted:#718096;
+      --border:#dce8f2;--danger:#c62828;--success:#198754
+    }
+    body{
+      font-family:"Cairo",sans-serif;min-height:100vh;color:var(--text);
+      background:radial-gradient(circle at top right,rgba(47,128,183,.15),transparent 35%),
+      linear-gradient(135deg,#eef6fb 0%,#fff 55%,#eaf4fb 100%);
+    }
+    header{background:rgba(255,255,255,.96);border-bottom:1px solid var(--border);
+      box-shadow:0 4px 20px rgba(23,59,99,.07);position:sticky;top:0;z-index:1000}
+    .navbar{max-width:1250px;margin:auto;min-height:78px;padding:12px 25px;
+      display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .brand{display:flex;align-items:center;gap:14px}
+    .brand-logo{width:52px;height:52px;border-radius:50%;background:var(--primary);
+      display:flex;align-items:center;justify-content:center;color:#fff;font-size:23px;
+      box-shadow:0 5px 15px rgba(23,59,99,.2)}
+    .brand-text h1{font-size:17px;font-weight:800;line-height:1.5}
+    .brand-text p{font-size:11px;color:var(--muted)}
+    .status{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--success);font-weight:700}
+    .status-dot{width:9px;height:9px;background:#22c55e;border-radius:50%;
+      box-shadow:0 0 0 4px rgba(34,197,94,.12)}
+    main{min-height:calc(100vh - 78px);display:flex;align-items:center;justify-content:center;padding:55px 20px}
+    .container{width:100%;max-width:1120px;margin:auto}
+    .hero{text-align:center;margin-bottom:40px}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border-radius:30px;
+      background:rgba(47,128,183,.1);color:var(--secondary);font-size:12px;font-weight:700;margin-bottom:18px}
+    .hero h2{font-size:clamp(28px,4vw,45px);line-height:1.4;font-weight:800;margin-bottom:12px}
+    .hero h2 span{color:var(--secondary)}
+    .hero p{max-width:700px;margin:auto;color:var(--muted);font-size:15px;line-height:2}
+    .login-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+    .login-card{background:rgba(255,255,255,.94);border:1px solid var(--border);border-radius:22px;
+      padding:30px 25px;text-align:center;box-shadow:0 12px 35px rgba(23,59,99,.08);
+      transition:.25s}
+    .login-card:hover{transform:translateY(-7px);border-color:rgba(47,128,183,.35);
+      box-shadow:0 20px 45px rgba(23,59,99,.13)}
+    .icon{width:70px;height:70px;margin:0 auto 18px;border-radius:20px;
+      background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;
+      display:flex;align-items:center;justify-content:center;font-size:29px;
+      box-shadow:0 10px 20px rgba(47,128,183,.2)}
+    .login-card h3{font-size:20px;margin-bottom:8px}
+    .login-card p{min-height:52px;color:var(--muted);font-size:13px;line-height:1.9;margin-bottom:20px}
+    .login-btn,.submit-btn{width:100%;border:0;border-radius:12px;padding:12px 18px;
+      background:var(--primary);color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:.2s}
+    .login-btn:hover,.submit-btn:hover{background:var(--secondary);transform:translateY(-2px)}
+    .features{margin-top:35px;display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+    .feature{background:rgba(255,255,255,.72);border:1px solid var(--border);border-radius:15px;
+      padding:16px;display:flex;align-items:center;gap:12px}
+    .feature-icon{width:40px;height:40px;flex-shrink:0;background:var(--bg);color:var(--secondary);
+      border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px}
+    .feature strong{display:block;font-size:12px;margin-bottom:2px}
+    .feature span{font-size:11px;color:var(--muted)}
+    footer{text-align:center;padding:25px 15px;color:var(--muted);font-size:11px}
+    footer strong{color:var(--primary)}
+    .modal{position:fixed;inset:0;background:rgba(10,30,50,.55);display:none;align-items:center;
+      justify-content:center;padding:20px;z-index:5000;backdrop-filter:blur(5px)}
+    .modal.show{display:flex}
+    .modal-box{width:100%;max-width:430px;background:#fff;border-radius:22px;padding:30px;
+      box-shadow:0 25px 70px rgba(0,0,0,.2);animation:modalIn .25s ease}
+    @keyframes modalIn{from{opacity:0;transform:translateY(15px) scale(.97)}to{opacity:1;transform:none}}
+    .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:25px}
+    .modal-header h3{font-size:20px}
+    .close-btn{border:0;background:#f1f5f9;width:35px;height:35px;border-radius:50%;cursor:pointer;font-size:18px;color:#64748b}
+    .form-group{margin-bottom:17px}
+    .form-group label{display:block;font-size:12px;font-weight:700;margin-bottom:7px}
+    .form-group input{width:100%;border:1px solid var(--border);border-radius:11px;padding:12px 13px;
+      font-family:inherit;font-size:13px;outline:0}
+    .form-group input:focus{border-color:var(--secondary)}
+    .submit-btn{margin-top:5px}
+    .submit-btn:disabled{opacity:.65;cursor:not-allowed;transform:none}
+    .message{display:none;margin-bottom:15px;padding:10px 12px;border-radius:10px;font-size:12px;line-height:1.7}
+    .message.show{display:block}
+    .message.error{background:#fff1f1;color:var(--danger);border:1px solid #ffd4d4}
+    .message.success{background:#effaf3;color:var(--success);border:1px solid #ccebd7}
+    .demo-note{margin-top:15px;padding:10px;border-radius:9px;background:#f8fafc;color:var(--muted);
+      font-size:10px;text-align:center;line-height:1.7}
+    .loading{display:inline-block;width:15px;height:15px;border:2px solid rgba(255,255,255,.5);
+      border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:-3px;margin-left:6px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @media(max-width:850px){
+      .login-grid{grid-template-columns:1fr;max-width:500px;margin:auto}
+      .features{grid-template-columns:1fr}.status{display:none}
+    }
+    @media(max-width:500px){
+      main{padding:35px 15px}.navbar{padding:10px 15px}
+      .brand-text h1{font-size:14px}.brand-text p{font-size:9px}.brand-logo{width:44px;height:44px}
+      .hero p{font-size:13px}.login-card{padding:25px 20px}
+    }
+  </style>
 </head>
 
 <body>
-
-<!-- =========================
-     HEADER
-========================== -->
-
 <header>
-
-    <nav class="navbar">
-
-        <div class="brand">
-
-            <div class="brand-logo">
-                🦷
-            </div>
-
-            <div class="brand-text">
-
-                <h1>
-                    كلية طب الأسنان
-                </h1>
-
-                <p>
-                    جامعة المنوفية
-                </p>
-
-            </div>
-
-        </div>
-
-        <div class="status">
-
-            <span class="status-dot"></span>
-
-            النظام الإلكتروني
-
-        </div>
-
-    </nav>
-
+  <nav class="navbar">
+    <div class="brand">
+      <div class="brand-logo">🦷</div>
+      <div class="brand-text">
+        <h1>كلية طب الأسنان</h1>
+        <p>جامعة المنوفية</p>
+      </div>
+    </div>
+    <div class="status"><span class="status-dot"></span>النظام الإلكتروني</div>
+  </nav>
 </header>
 
-
-<!-- =========================
-     MAIN
-========================== -->
-
 <main>
-
-    <div class="container">
-
-
-        <!-- HERO -->
-
-        <section class="hero">
-
-            <div class="hero-badge">
-
-                🦷 نظام إلكتروني متكامل
-
-            </div>
-
-            <h2>
-
-                نظام
-                <span>الحضور والغياب</span>
-
-            </h2>
-
-            <p>
-
-                نظام إلكتروني لإدارة حضور وغياب طلاب
-                كلية طب الأسنان بجامعة المنوفية،
-                ومتابعة المحاضرات والسكاشن والمواد الدراسية
-                بصورة منظمة وآمنة.
-
-            </p>
-
-        </section>
-
-
-        <!-- LOGIN TYPES -->
-
-        <section class="login-grid">
-
-
-            <!-- STUDENT -->
-
-            <div class="login-card">
-
-                <div class="icon">
-                    👨‍🎓
-                </div>
-
-                <h3>
-                    الطالب
-                </h3>
-
-                <p>
-
-                    تسجيل الدخول لمتابعة الحضور
-                    والغياب والمواد والمحاضرات الخاصة بك.
-
-                </p>
-
-                <button
-                    class="login-btn"
-                    onclick="openLogin('student')">
-
-                    دخول الطالب
-
-                </button>
-
-            </div>
-
-
-            <!-- DOCTOR -->
-
-            <div class="login-card">
-
-                <div class="icon">
-                    👨‍⚕️
-                </div>
-
-                <h3>
-                    عضو هيئة التدريس
-                </h3>
-
-                <p>
-
-                    إدارة المحاضرات والسكاشن
-                    وتسجيل ومتابعة حضور الطلاب.
-
-                </p>
-
-                <button
-                    class="login-btn"
-                    onclick="openLogin('doctor')">
-
-                    دخول عضو هيئة التدريس
-
-                </button>
-
-            </div>
-
-
-            <!-- ADMIN -->
-
-            <div class="login-card">
-
-                <div class="icon">
-                    ⚙️
-                </div>
-
-                <h3>
-                    الإدارة
-                </h3>
-
-                <p>
-
-                    إدارة الطلاب والمواد والجداول
-                    والتقارير ونظام الحضور بالكامل.
-
-                </p>
-
-                <button
-                    class="login-btn"
-                    onclick="openLogin('admin')">
-
-                    دخول الإدارة
-
-                </button>
-
-            </div>
-
-
-        </section>
-
-
-        <!-- FEATURES -->
-
-        <section class="features">
-
-
-            <div class="feature">
-
-                <div class="feature-icon">
-                    📊
-                </div>
-
-                <div>
-
-                    <strong>
-                        تقارير الحضور
-                    </strong>
-
-                    <span>
-                        متابعة حضور وغياب الطلاب
-                    </span>
-
-                </div>
-
-            </div>
-
-
-            <div class="feature">
-
-                <div class="feature-icon">
-                    📚
-                </div>
-
-                <div>
-
-                    <strong>
-                        المواد والمحاضرات
-                    </strong>
-
-                    <span>
-                        تنظيم المقررات والجلسات
-                    </span>
-
-                </div>
-
-            </div>
-
-
-            <div class="feature">
-
-                <div class="feature-icon">
-                    🔐
-                </div>
-
-                <div>
-
-                    <strong>
-                        حماية البيانات
-                    </strong>
-
-                    <span>
-                        البيانات محفوظة بشكل آمن
-                    </span>
-
-                </div>
-
-            </div>
-
-
-        </section>
-
-
-    </div>
-
+  <div class="container">
+    <section class="hero">
+      <div class="hero-badge">🦷 نظام إلكتروني متكامل</div>
+      <h2>نظام <span>الحضور والغياب</span></h2>
+      <p>
+        نظام إلكتروني لإدارة حضور وغياب طلاب كلية طب الأسنان بجامعة المنوفية،
+        ومتابعة المحاضرات والسكاشن والمواد الدراسية بصورة منظمة وآمنة.
+      </p>
+    </section>
+
+    <section class="login-grid">
+      <div class="login-card">
+        <div class="icon">👨‍🎓</div>
+        <h3>الطالب</h3>
+        <p>تسجيل الدخول لمتابعة الحضور والغياب والمواد والمحاضرات الخاصة بك.</p>
+        <button class="login-btn" onclick="openLogin('student')">دخول الطالب</button>
+      </div>
+
+      <div class="login-card">
+        <div class="icon">👨‍⚕️</div>
+        <h3>عضو هيئة التدريس</h3>
+        <p>إدارة المحاضرات والسكاشن وتسجيل ومتابعة حضور الطلاب.</p>
+        <button class="login-btn" onclick="openLogin('doctor')">دخول عضو هيئة التدريس</button>
+      </div>
+
+      <div class="login-card">
+        <div class="icon">⚙️</div>
+        <h3>الإدارة</h3>
+        <p>إدارة الطلاب والمواد والجداول والتقارير ونظام الحضور بالكامل.</p>
+        <button class="login-btn" onclick="openLogin('admin')">دخول الإدارة</button>
+      </div>
+    </section>
+
+    <section class="features">
+      <div class="feature"><div class="feature-icon">📊</div><div><strong>تقارير الحضور</strong><span>متابعة حضور وغياب الطلاب</span></div></div>
+      <div class="feature"><div class="feature-icon">📚</div><div><strong>المواد والمحاضرات</strong><span>تنظيم المقررات والجلسات</span></div></div>
+      <div class="feature"><div class="feature-icon">🔐</div><div><strong>حماية البيانات</strong><span>البيانات محفوظة في Firebase</span></div></div>
+    </section>
+  </div>
 </main>
 
-
-<!-- =========================
-     FOOTER
-========================== -->
-
 <footer>
-
-    <strong>
-        كلية طب الأسنان - جامعة المنوفية
-    </strong>
-
-    <br>
-
-    نظام الحضور والغياب الإلكتروني
-
-    <br><br>
-
-    © 2026 جميع الحقوق محفوظة
-
+  <strong>كلية طب الأسنان - جامعة المنوفية</strong><br>
+  نظام الحضور والغياب الإلكتروني<br><br>
+  © 2026 جميع الحقوق محفوظة
 </footer>
 
-
-<!-- =========================
-     LOGIN MODAL
-========================== -->
-
-<div
-    class="modal"
-    id="loginModal">
-
-    <div class="modal-box">
-
-
-        <div class="modal-header">
-
-            <h3 id="modalTitle">
-                تسجيل الدخول
-            </h3>
-
-            <button
-                class="close-btn"
-                onclick="closeLogin()">
-
-                ×
-
-            </button>
-
-        </div>
-
-
-        <form
-            id="loginForm"
-            onsubmit="handleLogin(event)">
-
-
-            <div class="form-group">
-
-                <label id="usernameLabel">
-                    البريد الإلكتروني
-                </label>
-
-                <input
-                    type="email"
-                    id="email"
-                    placeholder="أدخل البريد الإلكتروني"
-                    required>
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label>
-                    كلمة المرور
-                </label>
-
-                <input
-                    type="password"
-                    id="password"
-                    placeholder="أدخل كلمة المرور"
-                    required>
-
-            </div>
-
-
-            <button
-                type="submit"
-                class="submit-btn">
-
-                تسجيل الدخول
-
-            </button>
-
-
-            <div class="demo-note">
-
-                تسجيل الدخول سيتم ربطه لاحقًا
-                بـ Firebase Authentication.
-
-                <br>
-
-                لا تضعي بيانات الطلاب أو كلمات المرور
-                داخل هذا الملف.
-
-            </div>
-
-
-        </form>
-
+<div class="modal" id="loginModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="modalTitle">تسجيل الدخول</h3>
+      <button class="close-btn" onclick="closeLogin()" aria-label="إغلاق">×</button>
     </div>
 
+    <div id="message" class="message"></div>
+
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label for="email">البريد الإلكتروني</label>
+        <input type="email" id="email" placeholder="أدخل البريد الإلكتروني" autocomplete="email" required>
+      </div>
+
+      <div class="form-group">
+        <label for="password">كلمة المرور</label>
+        <input type="password" id="password" placeholder="أدخل كلمة المرور" autocomplete="current-password" required>
+      </div>
+
+      <button type="submit" class="submit-btn" id="submitBtn">تسجيل الدخول</button>
+
+      <div class="demo-note">
+        الحسابات والصلاحيات ستُدار من خلال Firebase Authentication وFirestore.
+        لا تضعي بيانات الطلاب أو كلمات المرور داخل GitHub.
+      </div>
+    </form>
+  </div>
 </div>
 
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+  import {
+    getAuth,
+    signInWithEmailAndPassword
+  } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+  import {
+    getFirestore,
+    doc,
+    getDoc
+  } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
-<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDmv6uUFKb4kTolYZsCVUGywcHrpF5m0Ug",
+    authDomain: "menoufia-dental-attendance.firebaseapp.com",
+    projectId: "menoufia-dental-attendance",
+    storageBucket: "menoufia-dental-attendance.firebasestorage.app",
+    messagingSenderId: "771979033431",
+    appId: "1:771979033431:web:5f75017c0dd02a1f965c12",
+    measurementId: "G-MCTXFY4P13"
+  };
 
-    /* =========================
-       LOGIN MODAL
-    ========================== */
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
-    let currentUserType = "";
+  let currentUserType = "";
 
+  window.openLogin = function(type) {
+    currentUserType = type;
 
-    function openLogin(type) {
+    const title = document.getElementById("modalTitle");
+    const email = document.getElementById("email");
 
-        currentUserType = type;
+    const titles = {
+      student: "دخول الطالب",
+      doctor: "دخول عضو هيئة التدريس",
+      admin: "دخول الإدارة"
+    };
 
-        const modal =
-            document.getElementById("loginModal");
+    title.textContent = titles[type] || "تسجيل الدخول";
+    email.placeholder = type === "student"
+      ? "البريد الإلكتروني للطالب"
+      : "البريد الإلكتروني";
 
-        const title =
-            document.getElementById("modalTitle");
+    clearMessage();
+    document.getElementById("loginModal").classList.add("show");
+    setTimeout(() => email.focus(), 100);
+  };
 
-        const email =
-            document.getElementById("email");
+  window.closeLogin = function() {
+    document.getElementById("loginModal").classList.remove("show");
+    document.getElementById("loginForm").reset();
+    clearMessage();
+  };
 
+  function showMessage(text, type = "error") {
+    const box = document.getElementById("message");
+    box.textContent = text;
+    box.className = `message show ${type}`;
+  }
 
-        if (type === "student") {
+  function clearMessage() {
+    const box = document.getElementById("message");
+    box.textContent = "";
+    box.className = "message";
+  }
 
-            title.textContent =
-                "دخول الطالب";
+  function friendlyAuthError(code) {
+    const errors = {
+      "auth/invalid-credential": "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
+      "auth/invalid-email": "صيغة البريد الإلكتروني غير صحيحة.",
+      "auth/user-disabled": "هذا الحساب تم تعطيله.",
+      "auth/too-many-requests": "تمت محاولات دخول كثيرة. حاولي مرة أخرى لاحقًا.",
+      "auth/network-request-failed": "تعذر الاتصال بالإنترنت. تأكدي من الاتصال ثم حاولي مرة أخرى.",
+      "auth/operation-not-allowed": "تسجيل الدخول بالبريد وكلمة المرور غير مفعّل في Firebase بعد."
+    };
+    return errors[code] || "حدث خطأ أثناء تسجيل الدخول. تأكدي من إعدادات الحساب ثم حاولي مرة أخرى.";
+  }
 
-            email.placeholder =
-                "البريد الإلكتروني للطالب";
+  function expectedRole(type) {
+    return {
+      student: "student",
+      doctor: "doctor",
+      admin: "admin"
+    }[type];
+  }
 
-        }
+  window.handleLogin = async function(event) {
+    event.preventDefault();
 
-        else if (type === "doctor") {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    const button = document.getElementById("submitBtn");
 
-            title.textContent =
-                "دخول عضو هيئة التدريس";
+    clearMessage();
+    button.disabled = true;
+    button.innerHTML = '<span class="loading"></span>جاري تسجيل الدخول...';
 
-            email.placeholder =
-                "البريد الإلكتروني";
+    try {
+      const credential = await signInWithEmailAndPassword(auth, email, password);
+      const uid = credential.user.uid;
 
-        }
+      const userRef = doc(db, "users", uid);
+      const userSnap = await getDoc(userRef);
 
-        else if (type === "admin") {
+      if (!userSnap.exists()) {
+        await auth.signOut();
+        showMessage("تم تسجيل الدخول، لكن هذا الحساب غير مُسجّل في نظام الصلاحيات حتى الآن.");
+        return;
+      }
 
-            title.textContent =
-                "دخول الإدارة";
+      const userData = userSnap.data();
+      const role = userData.role;
 
-            email.placeholder =
-                "البريد الإلكتروني للإدارة";
+      if (role !== expectedRole(currentUserType)) {
+        await auth.signOut();
+        showMessage("هذا الحساب لا يملك صلاحية الدخول من هذا القسم.");
+        return;
+      }
 
-        }
+      if (role === "student") {
+        window.location.href = "student.html";
+      } else if (role === "doctor") {
+        window.location.href = "doctor.html";
+      } else if (role === "admin") {
+        window.location.href = "admin.html";
+      } else {
+        await auth.signOut();
+        showMessage("دور الحساب غير معروف. راجعي بيانات المستخدم في Firestore.");
+      }
 
-
-        modal.classList.add("show");
-
+    } catch (error) {
+      console.error(error);
+      showMessage(friendlyAuthError(error.code));
+    } finally {
+      button.disabled = false;
+      button.textContent = "تسجيل الدخول";
     }
+  };
 
+  document.getElementById("loginModal").addEventListener("click", (event) => {
+    if (event.target.id === "loginModal") closeLogin();
+  });
 
-    function closeLogin() {
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeLogin();
+  });
 
-        document
-            .getElementById("loginModal")
-            .classList.remove("show");
-
-    }
-
-
-    /* =========================
-       LOGIN
-    ========================== */
-
-    function handleLogin(event) {
-
-        event.preventDefault();
-
-
-        /*
-            هذه المرحلة تجريبية فقط.
-
-            في المرحلة التالية سيتم استبدال
-            هذا الجزء بـ Firebase Authentication.
-        */
-
-
-        alert(
-            "سيتم ربط تسجيل الدخول بـ Firebase في المرحلة التالية."
-        );
-
-    }
-
-
-    /* =========================
-       CLOSE MODAL
-       CLICK OUTSIDE
-    ========================== */
-
-    document
-        .getElementById("loginModal")
-        .addEventListener(
-            "click",
-            function(event) {
-
-                if (event.target === this) {
-
-                    closeLogin();
-
-                }
-
-            }
-        );
-
-
-    /* =========================
-       ESC KEY
-    ========================== */
-
-    document.addEventListener(
-        "keydown",
-        function(event) {
-
-            if (event.key === "Escape") {
-
-                closeLogin();
-
-            }
-
-        }
-    );
-
+  // متاح أثناء الاختبار من Console فقط.
+  window.firebaseAttendance = { app, auth, db };
 </script>
-
 </body>
 </html>
