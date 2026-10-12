@@ -1,0 +1,9 @@
+{
+  "name": "menoufia-attendance-functions",
+  "description": "Secure attendance QR functions for Menoufia Faculty of Dentistry",
+  "scripts": {"serve":"firebase emulators:start --only functions,firestore,auth", "deploy":"firebase deploy --only functions", "logs":"firebase functions:log"},
+  "engines": {"node":"20"},
+  "main":"index.js",
+  "dependencies": {"firebase-admin":"^13.0.0", "firebase-functions":"^6.0.0"},
+  "private": true
+}
