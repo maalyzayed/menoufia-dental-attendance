@@ -1,0 +1,27 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function myUser() { return get(/databases/$(database)/documents/users/$(request.auth.uid)).data; }
+    function isAdmin() { return signedIn() && myUser().role == 'admin'; }
+    function isDoctor() { return signedIn() && myUser().role == 'doctor'; }
+    function isStudent() { return signedIn() && myUser().role == 'student'; }
+
+    match /users/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+      // إنشاء/تعديل الحسابات يتم عبر Cloud Functions موثوقة فقط.
+      allow create, update, delete: if false;
+    }
+    match /sessions/{sessionId} {
+      allow read: if signedIn() && (isAdmin() || (isDoctor() && resource.data.createdBy == request.auth.uid));
+      // الجلسات تُنشأ وتُغلق عبر Cloud Functions فقط.
+      allow create, update, delete: if false;
+    }
+    match /attendance/{attendanceId} {
+      allow read: if signedIn() && (isAdmin() || (isStudent() && resource.data.studentId == request.auth.uid) || (isDoctor() && resource.data.createdBy == request.auth.uid));
+      // منع التلاعب بالسجلات من المتصفح؛ check-in من الخادم.
+      allow create, update, delete: if false;
+    }
+    match /{document=**} { allow read, write: if false; }
+  }
+}
